@@ -1,10 +1,12 @@
 export const dynamic = "force-dynamic";
+export const revalidate = 0;
 import AdminProductsTable from "@/components/AdminProductsTable";
 
 async function getProducts() {
   try {
     const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/products`, {
       cache: "no-store",
+      next: { revalidate: 0 },
     });
 
     if (!res.ok) {
