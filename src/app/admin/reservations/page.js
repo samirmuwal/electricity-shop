@@ -2,7 +2,7 @@ import ReservationsTable from "@/components/ReservationsTable";
 
 async function getReservations() {
   try {
-    const res = await fetch("http://localhost:3000/api/reservations", {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/reservations`, {
       cache: "no-store",
     });
 
