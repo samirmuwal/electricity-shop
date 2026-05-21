@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import AdminProductsTable from "@/components/AdminProductsTable";
 
 async function getProducts() {

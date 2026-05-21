@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import ReservationsTable from "@/components/ReservationsTable";
 
 async function getReservations() {
