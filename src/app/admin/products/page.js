@@ -1,5 +1,6 @@
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
+
 import AdminProductsTable from "@/components/AdminProductsTable";
 
 async function getProducts() {
