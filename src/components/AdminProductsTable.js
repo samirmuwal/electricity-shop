@@ -1,13 +1,35 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import DeleteButton from "@/components/DeleteButton";
 
-export default function AdminProductsTable({ products }) {
+export default function AdminProductsTable() {
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("All");
   const [stockFilter, setStockFilter] = useState("All");
+
+  useEffect(() => {
+    async function fetchProducts() {
+      try {
+        const res = await fetch("/api/products", {
+          cache: "no-store",
+        });
+        const data = await res.json();
+        setProducts(data.products || []);
+      } catch (error) {
+        console.log("Fetch products error:", error);
+        setProducts([]);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchProducts();
+  }, []);
 
   const categories = [
     "All",
@@ -34,6 +56,10 @@ export default function AdminProductsTable({ products }) {
 
     return matchSearch && matchCategory && matchStock;
   });
+
+  if (loading) {
+    return <p className="p-6 text-gray-500">Loading products...</p>;
+  }
 
   return (
     <div>
@@ -88,7 +114,7 @@ export default function AdminProductsTable({ products }) {
                 <td className="p-3">
                   <img
                     src={item.image || "/placeholder.png"}
-                    alt={item.name}
+                    alt={item.name || "Product"}
                     className="w-14 h-14 object-cover rounded"
                   />
                 </td>
