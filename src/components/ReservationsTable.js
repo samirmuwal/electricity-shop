@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ReservationActions from "@/components/ReservationActions";
 import PrintReceiptButton from "@/components/PrintReceiptButton";
 
@@ -11,13 +11,36 @@ function statusClass(status) {
   return "bg-yellow-100 text-yellow-700";
 }
 
-export default function ReservationsTable({ reservations }) {
+export default function ReservationsTable() {
+  const [reservations, setReservations] = useState([]);
+  const [loading, setLoading] = useState(true);
+
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState("All");
 
+  useEffect(() => {
+    async function fetchReservations() {
+      try {
+        const res = await fetch("/api/reservations", {
+          cache: "no-store",
+        });
+
+        const data = await res.json();
+        setReservations(data.reservations || []);
+      } catch (error) {
+        console.log("Fetch reservations error:", error);
+        setReservations([]);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchReservations();
+  }, []);
+
   const filtered = reservations.filter((item) => {
     const text = `${item.name || ""} ${item.phone || ""} ${
-      item.product?.name || ""
+      item.product?.name || item.productName || ""
     }`.toLowerCase();
 
     const matchSearch = text.includes(search.toLowerCase());
@@ -25,6 +48,10 @@ export default function ReservationsTable({ reservations }) {
 
     return matchSearch && matchStatus;
   });
+
+  if (loading) {
+    return <p className="p-6 text-gray-500">Loading reservations...</p>;
+  }
 
   return (
     <div>
@@ -69,7 +96,7 @@ export default function ReservationsTable({ reservations }) {
                 <td className="p-3">{item.name || "N/A"}</td>
                 <td className="p-3">{item.phone || "N/A"}</td>
                 <td className="p-3">
-                  {item.product?.name || "Product deleted"}
+                  {item.product?.name || item.productName || "Product deleted"}
                 </td>
                 <td className="p-3">{item.quantity}</td>
                 <td className="p-3">
