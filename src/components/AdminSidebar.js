@@ -11,6 +11,7 @@ export default function AdminSidebar() {
         <Link href="/admin/add-product">Add Product</Link>
         <Link href="/admin/reservations">Reservations</Link>
         <Link href="/profile">Profile</Link>
+        <Link href="/admin/categories">Categories</Link>
         <Link href="/products">View Website</Link>
       </nav>
     </aside>
