@@ -24,3 +24,30 @@ export async function DELETE(req, { params }) {
     );
   }
 }
+export async function PUT(req, { params }) {
+  try {
+    await connectDB();
+
+    const { id } = await params;
+    const body = await req.json();
+
+    const category = await Category.findByIdAndUpdate(
+      id,
+      { name: body.name },
+      { new: true }
+    );
+
+    return NextResponse.json({
+      success: true,
+      category,
+    });
+  } catch (error) {
+    return NextResponse.json(
+      {
+        success: false,
+        message: "Failed to update category",
+      },
+      { status: 500 }
+    );
+  }
+}

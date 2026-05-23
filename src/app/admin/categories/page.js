@@ -7,6 +7,9 @@ export default function AdminCategoriesPage() {
   const [name, setName] = useState("");
   const [loading, setLoading] = useState(false);
 
+  const [editId, setEditId] = useState(null);
+  const [editName, setEditName] = useState("");
+
   async function fetchCategories() {
     const res = await fetch("/api/categories", {
       cache: "no-store",
@@ -38,17 +41,41 @@ export default function AdminCategoriesPage() {
     setLoading(false);
     fetchCategories();
   }
+
   async function handleDelete(id) {
-  const confirmDelete = confirm("Are you sure you want to delete this category?");
+    const confirmDelete = confirm(
+      "Are you sure you want to delete this category?"
+    );
 
-  if (!confirmDelete) return;
+    if (!confirmDelete) return;
 
-  await fetch(`/api/categories/${id}`, {
-    method: "DELETE",
-  });
+    await fetch(`/api/categories/${id}`, {
+      method: "DELETE",
+    });
 
-  fetchCategories();
-}
+    fetchCategories();
+  }
+
+  function startEdit(cat) {
+    setEditId(cat._id);
+    setEditName(cat.name);
+  }
+
+  async function handleUpdate(id) {
+    if (!editName.trim()) return;
+
+    await fetch(`/api/categories/${id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ name: editName }),
+    });
+
+    setEditId(null);
+    setEditName("");
+    fetchCategories();
+  }
 
   return (
     <div className="max-w-3xl bg-white p-6 rounded-2xl shadow">
@@ -77,15 +104,53 @@ export default function AdminCategoriesPage() {
           categories.map((cat) => (
             <div
               key={cat._id}
-              className="flex items-center justify-between border rounded-xl p-4"
+              className="flex items-center justify-between gap-3 border rounded-xl p-4"
             >
-              <p className="font-medium">{cat.name}</p>
-              <button
-  onClick={() => handleDelete(cat._id)}
-  className="bg-red-100 text-red-600 px-4 py-2 rounded-lg text-sm"
->
-  Delete
-</button>
+              {editId === cat._id ? (
+                <input
+                  className="border p-2 rounded-lg flex-1"
+                  value={editName}
+                  onChange={(e) => setEditName(e.target.value)}
+                />
+              ) : (
+                <p className="font-medium">{cat.name}</p>
+              )}
+
+              <div className="flex gap-2">
+                {editId === cat._id ? (
+                  <>
+                    <button
+                      onClick={() => handleUpdate(cat._id)}
+                      className="bg-green-100 text-green-700 px-4 py-2 rounded-lg text-sm"
+                    >
+                      Save
+                    </button>
+
+                    <button
+                      onClick={() => setEditId(null)}
+                      className="bg-gray-100 text-gray-700 px-4 py-2 rounded-lg text-sm"
+                    >
+                      Cancel
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <button
+                      onClick={() => startEdit(cat)}
+                      className="bg-blue-100 text-blue-700 px-4 py-2 rounded-lg text-sm"
+                    >
+                      Edit
+                    </button>
+
+                    <button
+                      onClick={() => handleDelete(cat._id)}
+                      className="bg-red-100 text-red-600 px-4 py-2 rounded-lg text-sm"
+                    >
+                      Delete
+                    </button>
+                  </>
+                )}
+              </div>
             </div>
           ))
         )}
