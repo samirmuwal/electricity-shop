@@ -1,12 +1,21 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 
 export default function ProductsPage() {
+  const searchParams = useSearchParams();
   const [products, setProducts] = useState([]);
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("All");
+  useEffect(() => {
+  const urlCategory = searchParams.get("category");
+
+  if (urlCategory) {
+    setCategory(urlCategory);
+  }
+}, [searchParams]);
   const [sort, setSort] = useState("");
   const [stockFilter, setStockFilter] = useState("All");
   const [loading, setLoading] = useState(true);

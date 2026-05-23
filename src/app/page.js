@@ -95,10 +95,10 @@ export default async function Home() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {categories.map((cat) => (
             <Link
-              href="/products"
-              key={cat}
-              className="bg-white rounded-2xl shadow p-6 hover:shadow-lg transition text-center"
-            >
+  href={`/products?category=${encodeURIComponent(cat)}`}
+  key={cat}
+  className="bg-white rounded-2xl shadow p-6 hover:shadow-lg transition text-center"
+>
               <div className="text-3xl mb-3">🔌</div>
               <p className="font-semibold">{cat}</p>
             </Link>
