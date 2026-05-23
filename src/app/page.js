@@ -1,6 +1,18 @@
 import Link from "next/link";
+import { connectDB } from "@/lib/db";
+import ShopSetting from "@/models/ShopSetting";
 
-export default function Home() {
+export const dynamic = "force-dynamic";
+
+export default async function Home() {
+  await connectDB();
+
+  const setting = await ShopSetting.findOne().lean();
+
+  const shopName = setting?.shopName || "Electric Shop";
+  const logo = setting?.logo || "";
+  const whatsapp = setting?.whatsapp || "";
+
   const categories = [
     "Bulbs",
     "Switches",
@@ -14,7 +26,6 @@ export default function Home() {
 
   return (
     <main className="bg-gray-50 min-h-screen">
-      {/* Hero Section */}
       <section className="w-full px-6 md:px-10 lg:px-14 py-16">
         <div className="bg-black text-white rounded-3xl p-8 md:p-14 grid md:grid-cols-2 gap-10 items-center">
           <div>
@@ -31,26 +42,40 @@ export default function Home() {
               tools at the best price.
             </p>
 
-            <div className="mt-8 flex gap-4">
+            <div className="mt-8 flex flex-col sm:flex-row gap-4">
               <Link
                 href="/products"
-                className="bg-white text-black px-6 py-3 rounded-xl font-semibold"
+                className="bg-white text-black px-6 py-3 rounded-xl font-semibold text-center"
               >
                 Shop Now
               </Link>
 
-              <Link
-                href="/products"
-                className="border border-white px-6 py-3 rounded-xl font-semibold"
-              >
-                View Products
-              </Link>
+              {whatsapp && (
+                <a
+                  href={`https://wa.me/${whatsapp}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="bg-green-600 text-white px-6 py-3 rounded-xl font-semibold text-center"
+                >
+                  WhatsApp Enquiry
+                </a>
+              )}
             </div>
           </div>
 
           <div className="bg-white/10 rounded-2xl p-8 text-center">
-            <div className="text-8xl">⚡</div>
-            <h2 className="text-2xl font-bold mt-4">Electric Shop</h2>
+            {logo ? (
+              <img
+                src={logo}
+                alt={shopName}
+                className="w-28 h-28 mx-auto rounded-full object-cover bg-white p-2"
+              />
+            ) : (
+              <div className="text-8xl">⚡</div>
+            )}
+
+            <h2 className="text-2xl font-bold mt-4">{shopName}</h2>
+
             <p className="text-gray-300 mt-2">
               Reliable products. Fast service.
             </p>
@@ -58,10 +83,10 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Categories */}
       <section className="w-full px-6 md:px-10 lg:px-14 pb-12">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-2xl font-bold">Shop by Category</h2>
+
           <Link href="/products" className="text-blue-600 font-medium">
             View All
           </Link>
@@ -81,7 +106,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Why Choose Us */}
       <section className="w-full px-6 md:px-10 lg:px-14 pb-16">
         <div className="grid md:grid-cols-3 gap-5">
           <div className="bg-white rounded-2xl shadow p-6">

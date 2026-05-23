@@ -1,5 +1,6 @@
 import { connectDB } from "@/lib/db";
 import Product from "@/models/Product";
+import ShopSetting from "@/models/ShopSetting";
 import { notFound } from "next/navigation";
 import ReserveButton from "@/components/ReserveButton";
 
@@ -7,7 +8,9 @@ export default async function ProductDetailsPage({ params }) {
   await connectDB();
 
   const { id } = await params;
+
   const product = await Product.findById(id).lean();
+  const setting = await ShopSetting.findOne().lean();
 
   if (!product) {
     notFound();
@@ -15,11 +18,11 @@ export default async function ProductDetailsPage({ params }) {
 
   const productId = product._id.toString();
 
-  const whatsappNumber = "7073357475"; // yaha apna WhatsApp number lagao
+  const whatsappNumber = setting?.whatsapp || "";
   const whatsappText = `Hello, I want to enquire about ${product.name}. Price: ₹${product.price}`;
-  const whatsappLink = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(
-    whatsappText
-  )}`;
+  const whatsappLink = whatsappNumber
+    ? `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(whatsappText)}`
+    : "#";
 
   return (
     <div className="w-full px-6 md:px-10 lg:px-14 py-8">
@@ -70,20 +73,29 @@ export default async function ProductDetailsPage({ params }) {
           </p>
 
           <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-3">
-  <div className="w-full">
-    <ReserveButton productId={productId} />
-  </div>
+            <div className="w-full">
+              <ReserveButton productId={productId} />
+            </div>
 
-  <a
-    href={whatsappLink}
-    target="_blank"
-    rel="noopener noreferrer"
-    className="w-full h-12 bg-green-600 hover:bg-green-700 text-white rounded-xl flex items-center justify-center gap-2 font-semibold shadow-sm transition"
-  >
-    <span className="text-lg">💬</span>
-    <span>WhatsApp Enquiry</span>
-  </a>
-</div>
+            {whatsappNumber ? (
+              <a
+                href={whatsappLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full h-12 bg-green-600 hover:bg-green-700 text-white rounded-xl flex items-center justify-center gap-2 font-semibold shadow-sm transition"
+              >
+                <span className="text-lg">💬</span>
+                <span>WhatsApp Enquiry</span>
+              </a>
+            ) : (
+              <button
+                disabled
+                className="w-full h-12 bg-gray-300 text-gray-600 rounded-xl flex items-center justify-center font-semibold"
+              >
+                WhatsApp Not Available
+              </button>
+            )}
+          </div>
         </div>
       </div>
     </div>

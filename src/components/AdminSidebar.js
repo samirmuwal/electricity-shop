@@ -9,9 +9,10 @@ export default function AdminSidebar() {
         <Link href="/admin/dashboard">Dashboard</Link>
         <Link href="/admin/products">Products</Link>
         <Link href="/admin/add-product">Add Product</Link>
-        <Link href="/admin/reservations">Reservations</Link>
-        <Link href="/profile">Profile</Link>
         <Link href="/admin/categories">Categories</Link>
+        <Link href="/admin/reservations">Reservations</Link>
+        <Link href="/admin/settings">Shop Settings</Link>
+        <Link href="/profile">Profile</Link>
         <Link href="/products">View Website</Link>
       </nav>
     </aside>

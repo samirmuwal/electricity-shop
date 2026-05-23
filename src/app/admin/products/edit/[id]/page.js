@@ -11,6 +11,7 @@ export default function EditProductPage() {
   const [loading, setLoading] = useState(false);
   const [imageFile, setImageFile] = useState(null);
   const [preview, setPreview] = useState("");
+  const [categories, setCategories] = useState([]);
 
   const [form, setForm] = useState({
     name: "",
@@ -23,6 +24,20 @@ export default function EditProductPage() {
     description: "",
     image: "",
   });
+
+  useEffect(() => {
+    async function fetchCategories() {
+      try {
+        const res = await fetch("/api/categories");
+        const data = await res.json();
+        setCategories(data.categories || []);
+      } catch (error) {
+        console.log("Category fetch error:", error);
+      }
+    }
+
+    fetchCategories();
+  }, []);
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -100,18 +115,78 @@ export default function EditProductPage() {
       <h1 className="text-2xl font-bold mb-6">Edit Product</h1>
 
       <form onSubmit={handleUpdate} className="space-y-4">
-        {["name", "brand", "category", "price", "stock", "watt", "voltage"].map(
-          (key) => (
-            <div key={key}>
-              <label className="block mb-1 font-medium capitalize">{key}</label>
-              <input
-                className="w-full border p-3 rounded"
-                value={form[key]}
-                onChange={(e) => setForm({ ...form, [key]: e.target.value })}
-              />
-            </div>
-          )
-        )}
+        <div>
+          <label className="block mb-1 font-medium">Name</label>
+          <input
+            className="w-full border p-3 rounded"
+            value={form.name}
+            onChange={(e) => setForm({ ...form, name: e.target.value })}
+          />
+        </div>
+
+        <div>
+          <label className="block mb-1 font-medium">Brand</label>
+          <input
+            className="w-full border p-3 rounded"
+            value={form.brand}
+            onChange={(e) => setForm({ ...form, brand: e.target.value })}
+          />
+        </div>
+
+        <div>
+          <label className="block mb-1 font-medium">Category</label>
+          <select
+            className="w-full border p-3 rounded"
+            value={form.category}
+            onChange={(e) => setForm({ ...form, category: e.target.value })}
+          >
+            <option value="">Select Category</option>
+
+            {categories.map((cat) => (
+              <option key={cat._id} value={cat.name}>
+                {cat.name}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div>
+          <label className="block mb-1 font-medium">Price</label>
+          <input
+            type="number"
+            className="w-full border p-3 rounded"
+            value={form.price}
+            onChange={(e) => setForm({ ...form, price: e.target.value })}
+          />
+        </div>
+
+        <div>
+          <label className="block mb-1 font-medium">Stock</label>
+          <input
+            type="number"
+            className="w-full border p-3 rounded"
+            value={form.stock}
+            onChange={(e) => setForm({ ...form, stock: e.target.value })}
+          />
+        </div>
+
+        <div>
+          <label className="block mb-1 font-medium">Watt</label>
+          <input
+            className="w-full border p-3 rounded"
+            value={form.watt}
+            onChange={(e) => setForm({ ...form, watt: e.target.value })}
+          />
+        </div>
+
+        <div>
+          <label className="block mb-1 font-medium">Voltage</label>
+          <input
+            className="w-full border p-3 rounded"
+            value={form.voltage}
+            onChange={(e) => setForm({ ...form, voltage: e.target.value })}
+          />
+        </div>
 
         <ImageUploadInput preview={preview} onFileChange={handleImageChange} />
 
