@@ -1,20 +1,70 @@
+"use client";
+
+import { useState } from "react";
 import Link from "next/link";
 
 export default function AdminSidebar() {
-  return (
-    <aside className="w-64 bg-black text-white p-6 hidden md:block min-h-screen">
-      <h2 className="text-2xl font-bold mb-8">Admin Panel</h2>
+  const [open, setOpen] = useState(false);
 
-      <nav className="flex flex-col gap-4">
-        <Link href="/admin/dashboard">Dashboard</Link>
-        <Link href="/admin/products">Products</Link>
-        <Link href="/admin/add-product">Add Product</Link>
-        <Link href="/admin/categories">Categories</Link>
-        <Link href="/admin/reservations">Reservations</Link>
-        <Link href="/admin/settings">Shop Settings</Link>
-        <Link href="/profile">Profile</Link>
-        <Link href="/products">View Website</Link>
-      </nav>
-    </aside>
+  const links = [
+    { href: "/admin/dashboard", label: "Dashboard" },
+    { href: "/admin/products", label: "Products" },
+    { href: "/admin/add-product", label: "Add Product" },
+    { href: "/admin/categories", label: "Categories" },
+    { href: "/admin/reservations", label: "Reservations" },
+    { href: "/admin/settings", label: "Shop Settings" },
+    { href: "/profile", label: "Profile" },
+    { href: "/products", label: "View Website" },
+  ];
+
+  return (
+    <>
+      {/* Mobile Top Button */}
+      <button
+        onClick={() => setOpen(true)}
+        className="md:hidden fixed top-20 left-4 z-50 bg-black text-white px-4 py-2 rounded-lg"
+      >
+        ☰ Menu
+      </button>
+
+      {/* Overlay */}
+      {open && (
+        <div
+          onClick={() => setOpen(false)}
+          className="fixed inset-0 bg-black/50 z-50 md:hidden"
+        />
+      )}
+
+      {/* Sidebar */}
+      <aside
+        className={`fixed md:sticky top-0 left-0 z-50 w-64 bg-black text-white p-6 min-h-screen transform transition-transform duration-300
+        ${open ? "translate-x-0" : "-translate-x-full"}
+        md:translate-x-0`}
+      >
+        <div className="flex items-center justify-between mb-8">
+          <h2 className="text-2xl font-bold">Admin Panel</h2>
+
+          <button
+            onClick={() => setOpen(false)}
+            className="md:hidden text-2xl"
+          >
+            ×
+          </button>
+        </div>
+
+        <nav className="flex flex-col gap-3">
+          {links.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              onClick={() => setOpen(false)}
+              className="p-3 rounded-lg hover:bg-white/10"
+            >
+              {item.label}
+            </Link>
+          ))}
+        </nav>
+      </aside>
+    </>
   );
 }
