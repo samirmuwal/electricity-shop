@@ -8,6 +8,7 @@ export default function ProductsPage() {
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("All");
   const [sort, setSort] = useState("");
+  const [stockFilter, setStockFilter] = useState("All");
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -40,7 +41,17 @@ export default function ProductsPage() {
 
     const matchCategory = category === "All" || item.category === category;
 
-    return matchSearch && matchCategory;
+    let matchStock = true;
+
+    if (stockFilter === "in-stock") {
+      matchStock = Number(item.stock) > 0;
+    }
+
+    if (stockFilter === "out-of-stock") {
+      matchStock = Number(item.stock) === 0;
+    }
+
+    return matchSearch && matchCategory && matchStock;
   });
 
   if (sort === "price-low") {
@@ -87,10 +98,20 @@ export default function ProductsPage() {
             <option value="stock-low">Stock Low to High</option>
             <option value="stock-high">Stock High to Low</option>
           </select>
+
+          <select
+            className="border p-3 rounded-lg"
+            value={stockFilter}
+            onChange={(e) => setStockFilter(e.target.value)}
+          >
+            <option value="All">All Stock</option>
+            <option value="in-stock">In Stock</option>
+            <option value="out-of-stock">Out of Stock</option>
+          </select>
         </div>
       </div>
 
-      <div className="flex gap-3 overflow-x-auto mb-8 pb-2">
+      <div className="flex gap-3 overflow-x-auto mb-4 pb-2">
         {categories.map((cat) => (
           <button
             key={cat}
@@ -105,6 +126,8 @@ export default function ProductsPage() {
           </button>
         ))}
       </div>
+
+      <p className="text-gray-600 mb-6">{filtered.length} products found</p>
 
       {filtered.length === 0 ? (
         <p>No products found</p>
