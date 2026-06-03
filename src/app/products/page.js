@@ -1,11 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation";
+// import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 
 export default function ProductsPage() {
-  const searchParams = useSearchParams();
+  // const searchParams = useSearchParams();
   const [products, setProducts] = useState([]);
   
   const [category, setCategory] = useState("All");
