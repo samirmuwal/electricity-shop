@@ -7,7 +7,7 @@ import Link from "next/link";
 export default function ProductsPage() {
   const searchParams = useSearchParams();
   const [products, setProducts] = useState([]);
-  const [search, setSearch] = useState("");
+  
   const [category, setCategory] = useState("All");
   useEffect(() => {
   const urlCategory = searchParams.get("category");
@@ -89,12 +89,6 @@ export default function ProductsPage() {
         <h1 className="text-3xl font-bold">Products ⚡</h1>
 
         <div className="flex flex-col sm:flex-row gap-3">
-          <input
-            placeholder="Search product..."
-            className="border p-3 rounded-lg"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
 
           <select
             className="border p-3 rounded-lg"
