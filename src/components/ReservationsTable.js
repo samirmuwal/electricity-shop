@@ -18,25 +18,25 @@ export default function ReservationsTable() {
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState("All");
 
-  useEffect(() => {
-    async function fetchReservations() {
-      try {
-        const res = await fetch("/api/reservations", {
-          cache: "no-store",
-        });
+ const fetchReservations = async () => {
+  try {
+    const res = await fetch("/api/reservations", {
+      cache: "no-store",
+    });
 
-        const data = await res.json();
-        setReservations(data.reservations || []);
-      } catch (error) {
-        console.log("Fetch reservations error:", error);
-        setReservations([]);
-      } finally {
-        setLoading(false);
-      }
-    }
+    const data = await res.json();
+    setReservations(data.reservations || []);
+  } catch (error) {
+    console.log("Fetch reservations error:", error);
+    setReservations([]);
+  } finally {
+    setLoading(false);
+  }
+};
 
-    fetchReservations();
-  }, []);
+useEffect(() => {
+  fetchReservations();
+}, []);
 
   const filtered = reservations.filter((item) => {
     const text = `${item.name || ""} ${item.phone || ""} ${
@@ -109,7 +109,10 @@ export default function ReservationsTable() {
                   </span>
                 </td>
                 <td className="p-3">
-                  <ReservationActions id={item._id} />
+                  <ReservationActions
+  id={item._id}
+  refreshReservations={fetchReservations}
+/>
                 </td>
                 <td className="p-3">
                   <PrintReceiptButton reservation={item} />

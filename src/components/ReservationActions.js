@@ -3,7 +3,10 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-export default function ReservationActions({ id }) {
+export default function ReservationActions({
+  id,
+  refreshReservations,
+}) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
@@ -22,8 +25,8 @@ export default function ReservationActions({ id }) {
 
     setLoading(false);
 
-    if (data.success) {
-  router.refresh();
+   if (data.success) {
+  refreshReservations?.();
 } else {
   alert(data.error || "Status update failed");
 }
