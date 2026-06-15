@@ -137,7 +137,7 @@ export default function ProductsPage() {
       {filtered.length === 0 ? (
         <p>No products found.</p>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 flex-col md:flex-row gap-6">
           {filtered.map((item) => (
             <Link
               href={`/products/${item._id}`}
