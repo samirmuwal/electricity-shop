@@ -1,6 +1,6 @@
 "use client";
-
-import { useEffect, useState } from "react";
+import { Search, Menu, X } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import { useSession, signOut } from "next-auth/react";
 import Link from "next/link";
 
@@ -14,7 +14,10 @@ export default function Navbar() {
     phone: "",
     whatsapp: "",
   });
-
+  const [searchOpen, setSearchOpen] = useState(false);
+const [search, setSearch] = useState("");
+const [products, setProducts] = useState([]);
+const searchRef = useRef(null);
   useEffect(() => {
     async function fetchSettings() {
       try {
@@ -36,8 +39,43 @@ export default function Navbar() {
 
     fetchSettings();
   }, []);
+useEffect(() => {
+  async function fetchProducts() {
+    try {
+      const res = await fetch("/api/products");
+      const data = await res.json();
+      setProducts(data.products || []);
+    } catch (err) {
+      console.log(err);
+    }
+  }
 
-  return (
+  fetchProducts();
+}, []);
+const filteredProducts = products.filter((item) =>
+  item.name?.toLowerCase().includes(search.toLowerCase())
+);
+useEffect(() => {
+  function handleClickOutside(event) {
+    if (
+      searchRef.current &&
+      !searchRef.current.contains(event.target)
+    ) {
+      setSearchOpen(false);
+    }
+  }
+
+  document.addEventListener("mousedown", handleClickOutside);
+
+  return () => {
+    document.removeEventListener(
+      "mousedown",
+      handleClickOutside
+    );
+  };
+}, []);
+ return (
+  <>
     <div className="sticky top-0 z-50 bg-white/90 backdrop-blur-md shadow-sm px-6 py-4 flex justify-between items-center">
       <Link href="/" className="flex items-center gap-3">
         {setting.logo ? (
@@ -61,6 +99,21 @@ export default function Navbar() {
         ) : (
           <Link href="/products">Products</Link>
         )}
+
+        <button
+          onClick={() => setSearchOpen(!searchOpen)}
+          className="p-2 rounded-full hover:bg-gray-100"
+        >
+          <div className="relative">
+  <Search size={20} />
+
+  {products.length > 0 && (
+    <span className="absolute -top-2 -right-2 text-[10px] bg-black text-white px-1.5 rounded-full">
+      {products.length}
+    </span>
+  )}
+</div>
+        </button>
 
         {setting.whatsapp && (
           <a
@@ -87,8 +140,9 @@ export default function Navbar() {
                 <p className="text-sm font-semibold text-gray-800">
                   {session.user.name}
                 </p>
-
-                <p className="text-xs text-gray-500">{session.user.role}</p>
+                <p className="text-xs text-gray-500">
+                  {session.user.role}
+                </p>
               </div>
             </Link>
 
@@ -113,5 +167,56 @@ export default function Navbar() {
         )}
       </div>
     </div>
-  );
-}
+
+    {searchOpen && (
+      
+      <div  ref={searchRef} className="absolute top-[70px] right-6 w-[350px] md:w-[450px] bg-white rounded-2xl shadow-2xl border z-50 overflow-hidden">
+        <div className="max-h-72 overflow-y-auto">
+          <input
+            type="text"
+            placeholder="Search products..."
+            className="w-full p-4 outline-none border-b"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+
+          {search && (
+            <div className="mt-3 max-h-80 overflow-y-auto">
+              {filteredProducts.slice(0, 10).map((product) => (
+                <Link
+                  key={product._id}
+                  href={`/products/${product._id}`}
+                  onClick={() => {
+                    setSearch("");
+                    setSearchOpen(false);
+                  }}
+                  className="flex items-center gap-3 p-3 hover:bg-gray-100 rounded-lg"
+                >
+                  <img
+                    src={product.image || "/placeholder.png"}
+                    alt={product.name}
+                    className="w-12 h-12 object-contain"
+                  />
+
+                  <div>
+                    <p className="font-medium">{product.name}</p>
+                    <p className="text-sm text-gray-500">
+                      ₹{product.price}
+                    </p>
+                  </div>
+                </Link>
+              ))}
+
+              {filteredProducts.length === 0 && (
+                <p className="p-3 text-gray-500">
+                  No products found
+                </p>
+              )}
+            </div>
+          )}
+        </div>
+      </div>
+    )}
+  </>
+)
+};
