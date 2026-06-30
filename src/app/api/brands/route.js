@@ -1,19 +1,18 @@
 import { NextResponse } from "next/server";
 import { connectDB } from "@/lib/db";
-import Category from "@/models/Category";
+import Brand from "@/models/Brand";
 
 export async function GET() {
   try {
     await connectDB();
 
-    const categories = await Category.find({ isActive: true }).sort({
-      order: 1,
+    const brands = await Brand.find({ isActive: true }).sort({
       name: 1,
     });
 
     return NextResponse.json({
       success: true,
-      categories,
+      brands,
     });
   } catch (error) {
     return NextResponse.json(
@@ -36,14 +35,14 @@ export async function POST(req) {
       .toLowerCase()
       .replace(/\s+/g, "-");
 
-    const category = await Category.create({
+    const brand = await Brand.create({
       ...body,
       slug,
     });
 
     return NextResponse.json({
       success: true,
-      category,
+      brand,
     });
   } catch (error) {
     return NextResponse.json(

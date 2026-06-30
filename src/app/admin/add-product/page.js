@@ -13,32 +13,54 @@ export default function AddProductPage() {
 
   const [categories, setCategories] = useState([]);
 
-  const [form, setForm] = useState({
-    name: "",
-    brand: "",
-    category: "",
-    price: "",
-    stock: "",
-    watt: "",
-    voltage: "",
-    description: "",
-    image: "",
-  });
+ const [form, setForm] = useState({
+  name: "",
+  sku: "",
 
-  useEffect(() => {
-    async function fetchCategories() {
-      try {
-        const res = await fetch("/api/categories");
-        const data = await res.json();
+  brand: "",
+  category: "",
+  subCategory: "",
 
-        setCategories(data.categories || []);
-      } catch (error) {
-        console.log("Category fetch error:", error);
-      }
+  price: "",
+  salePrice: "",
+
+  stock: "",
+
+  watt: "",
+  voltage: "",
+  warranty: "",
+
+  description: "",
+
+  image: "",
+
+  featured: false,
+  bestSeller: false,
+  newArrival: true,
+
+  tags: "",
+});
+const [brands, setBrands] = useState([]);
+ useEffect(() => {
+  async function loadData() {
+    try {
+      const [categoryRes, brandRes] = await Promise.all([
+        fetch("/api/categories"),
+        fetch("/api/brands"),
+      ]);
+
+      const categoryData = await categoryRes.json();
+      const brandData = await brandRes.json();
+
+      setCategories(categoryData.categories || []);
+      setBrands(brandData.brands || []);
+    } catch (err) {
+      console.log(err);
     }
+  }
 
-    fetchCategories();
-  }, []);
+  loadData();
+}, []);
 
   function handleImageChange(file) {
     if (!file) return;
@@ -94,13 +116,33 @@ export default function AddProductPage() {
           value={form.name}
           onChange={(e) => setForm({ ...form, name: e.target.value })}
         />
-
         <input
-          placeholder="Brand"
-          className="w-full border p-3 rounded-lg"
-          value={form.brand}
-          onChange={(e) => setForm({ ...form, brand: e.target.value })}
-        />
+  placeholder="SKU (Example: SW-1001)"
+  className="w-full border p-3 rounded-lg"
+  value={form.sku}
+  onChange={(e) =>
+    setForm({ ...form, sku: e.target.value })
+  }
+/>
+
+       <select
+  className="w-full border p-3 rounded-lg"
+  value={form.brand}
+  onChange={(e) =>
+    setForm({ ...form, brand: e.target.value })
+  }
+>
+  <option value="">Select Brand</option>
+
+  {brands.map((brand) => (
+    <option
+      key={brand._id}
+      value={brand.name}
+    >
+      {brand.name}
+    </option>
+  ))}
+</select>
 
         {/* Category Dropdown */}
         <select
@@ -124,7 +166,15 @@ export default function AddProductPage() {
           value={form.price}
           onChange={(e) => setForm({ ...form, price: e.target.value })}
         />
-
+      <input
+  type="number"
+  placeholder="Sale Price"
+  className="w-full border p-3 rounded-lg"
+  value={form.salePrice}
+  onChange={(e) =>
+    setForm({ ...form, salePrice: e.target.value })
+  }
+/>
         <input
           type="number"
           placeholder="Stock"
@@ -146,12 +196,54 @@ export default function AddProductPage() {
           value={form.voltage}
           onChange={(e) => setForm({ ...form, voltage: e.target.value })}
         />
-
+  <input
+  placeholder="Warranty (Example: 2 Years)"
+  className="w-full border p-3 rounded-lg"
+  value={form.warranty}
+  onChange={(e) =>
+    setForm({ ...form, warranty: e.target.value })
+  }
+/>
         <ImageUploadInput
           preview={preview}
           onFileChange={handleImageChange}
         />
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
 
+  <label className="flex items-center gap-2 border rounded-lg p-3 cursor-pointer">
+    <input
+      type="checkbox"
+      checked={form.featured}
+      onChange={(e) =>
+        setForm({ ...form, featured: e.target.checked })
+      }
+    />
+    <span>Featured Product</span>
+  </label>
+
+  <label className="flex items-center gap-2 border rounded-lg p-3 cursor-pointer">
+    <input
+      type="checkbox"
+      checked={form.bestSeller}
+      onChange={(e) =>
+        setForm({ ...form, bestSeller: e.target.checked })
+      }
+    />
+    <span>Best Seller</span>
+  </label>
+
+  <label className="flex items-center gap-2 border rounded-lg p-3 cursor-pointer">
+    <input
+      type="checkbox"
+      checked={form.newArrival}
+      onChange={(e) =>
+        setForm({ ...form, newArrival: e.target.checked })
+      }
+    />
+    <span>New Arrival</span>
+  </label>
+
+</div>
         <textarea
           placeholder="Description"
           className="w-full border p-3 rounded-lg"

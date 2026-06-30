@@ -37,9 +37,9 @@ export default function AdminSidebar() {
 
       {/* Sidebar */}
       <aside
-        className={`fixed md:sticky top-0 left-0 z-50 w-64 bg-black text-white p-6 min-h-screen transform transition-transform duration-300
-        ${open ? "translate-x-0" : "-translate-x-full"}
-        md:translate-x-0`}
+        className={`fixed top-0 left-0 z-50 w-64 bg-black text-white p-6 h-screen overflow-y-auto transform transition-transform duration-300
+${open ? "translate-x-0" : "-translate-x-full"}
+md:translate-x-0`}
       >
         <div className="flex items-center justify-between mb-8">
           <h2 className="text-2xl font-bold">Admin Panel</h2>

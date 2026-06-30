@@ -1,5 +1,6 @@
 "use client";
-
+import ProductCard from "@/components/product/ProductCard";
+import FiltersSidebar from "@/components/product/FiltersSidebar";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 
@@ -139,50 +140,11 @@ export default function ProductsPage() {
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 flex-col md:flex-row gap-6">
           {filtered.map((item) => (
-            <Link
-              href={`/products/${item._id}`}
-              key={item._id}
-            >
-              <div className="bg-white rounded-xl shadow-md hover:shadow-xl transition p-4 h-[420px] flex flex-col">
-                <div className="h-[220px] w-full bg-gray-50 rounded-lg flex items-center justify-center overflow-hidden">
-                  <img
-                    src={item.image || "/placeholder.png"}
-                    alt={item.name}
-                    className="w-full h-full object-contain"
-                    onError={(e) => {
-                      e.currentTarget.src = "/placeholder.png";
-                    }}
-                  />
-                </div>
-
-                <div className="mt-3 flex items-center justify-between">
-                  <span className="text-xs bg-gray-100 px-2 py-1 rounded">
-                    {item.category}
-                  </span>
-
-                  {Number(item.stock) < 5 && (
-                    <span className="text-xs bg-red-100 text-red-600 px-2 py-1 rounded">
-                      Low Stock
-                    </span>
-                  )}
-                </div>
-
-                <h2 className="mt-3 font-semibold min-h-[48px] line-clamp-2">
-                  {item.name}
-                </h2>
-
-                <div className="mt-auto">
-                  <p className="text-lg font-bold">
-                    ₹{item.price}
-                  </p>
-
-                  <p className="text-sm text-gray-500">
-                    Stock: {item.stock}
-                  </p>
-                </div>
-              </div>
-            </Link>
-          ))}
+  <ProductCard
+    key={item._id}
+    product={item}
+  />
+))}
         </div>
       )}
     </div>

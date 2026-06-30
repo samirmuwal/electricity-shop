@@ -155,6 +155,27 @@ useEffect(() => {
           </>
         ) : (
           <>
+          <div className="bg-slate-900 text-white text-sm">
+  <div className="max-w-7xl mx-auto px-6 py-2 flex justify-between items-center">
+
+    <div className="flex gap-6">
+      <span>📞 {setting.phone || "+91 9876543210"}</span>
+
+      <span className="hidden md:block">
+        ⚡ Genuine Electrical Products
+      </span>
+    </div>
+
+    <div className="hidden md:flex gap-6">
+      <Link href="/about">About</Link>
+
+      <Link href="/contact">Contact</Link>
+
+      <Link href="/products">Shop</Link>
+    </div>
+
+  </div>
+</div>
             <Link href="/login">Login</Link>
 
             <Link

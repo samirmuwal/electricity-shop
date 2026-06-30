@@ -13,13 +13,34 @@ export async function GET() {
 }
 
 export async function POST(req) {
-  await connectDB();
-  const body = await req.json();
+  try {
+    await connectDB();
 
-  const product = await Product.create(body);
+    const body = await req.json();
 
-  return NextResponse.json({
-    success: true,
-    product,
-  });
+    // Auto slug generate
+    const slug = body.name
+      .toLowerCase()
+      .trim()
+      .replace(/\s+/g, "-")
+      .replace(/[^\w-]+/g, "");
+
+    const product = await Product.create({
+      ...body,
+      slug,
+    });
+
+    return NextResponse.json({
+      success: true,
+      product,
+    });
+  } catch (error) {
+    return NextResponse.json(
+      {
+        success: false,
+        message: error.message,
+      },
+      { status: 500 }
+    );
+  }
 }
