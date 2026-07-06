@@ -1,5 +1,6 @@
 "use client";
 import { Search, Menu, X, ShoppingCart } from "lucide-react";
+import MobileDrawer from "@/components/layout/MobileDrawer";
 import { useEffect, useRef, useState } from "react";
 import { useSession, signOut } from "next-auth/react";
 import { useCart } from "@/context/CartContext";
@@ -20,6 +21,7 @@ export default function Navbar() {
   const [searchOpen, setSearchOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [products, setProducts] = useState([]);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const searchRef = useRef(null);
 
   useEffect(() => {
@@ -258,6 +260,11 @@ export default function Navbar() {
           </div>
         </div>
       )}
+      <MobileDrawer
+  open={mobileMenuOpen}
+  onClose={() => setMobileMenuOpen(false)}
+  session={session}
+/>
     </>
   );
 }
