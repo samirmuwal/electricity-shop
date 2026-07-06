@@ -203,7 +203,9 @@ export default async function DashboardPage() {
                   <div key={ord._id} className="flex justify-between border-b pb-2 text-xs">
                     <div>
                       <p className="font-bold">{ord.name}</p>
-                      <p className="text-gray-400 font-mono">{ord._id.substring(0, 8)}...</p>
+                    <p className="text-gray-400 font-mono">
+  {String(ord._id).substring(0, 8)}...
+</p>
                     </div>
                     <div className="text-right">
                       <p className="font-bold text-orange-600">₹{ord.totalAmount}</p>
