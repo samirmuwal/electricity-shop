@@ -160,13 +160,13 @@ export default function Navbar() {
           {session ? (
             <div className="flex items-center gap-3">
               <Link
-                href="/profile"
-                className="flex items-center gap-2 bg-gray-100 hover:bg-gray-200 px-3 py-1.5 rounded-full transition"
-              >
+  href="/profile"
+  className="flex items-center gap-2 bg-gray-100 hover:bg-gray-200 px-2 lg:px-3 py-2 rounded-full transition"
+>
                 <span className="w-8 h-8 rounded-full bg-black text-white flex items-center justify-center font-bold">
                   {session.user.name?.charAt(0).toUpperCase()}
                 </span>
-                <div className="leading-tight hidden sm:block text-left">
+                <div className="leading-tight hidden lg:block">
                   <p className="text-sm font-semibold text-gray-800">
                     {session.user.name}
                   </p>
@@ -177,11 +177,11 @@ export default function Navbar() {
               </Link>
 
               <button
-                onClick={() => signOut({ callbackUrl: "/login" })}
-                className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition"
-              >
-                Logout
-              </button>
+  onClick={() => signOut({ callbackUrl: "/login" })}
+  className="hidden lg:flex bg-red-600 text-white px-4 py-2 rounded-lg items-center justify-center"
+>
+  Logout
+</button>
             </div>
           ) : (
             <div className="flex items-center gap-3">
