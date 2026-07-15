@@ -1,4 +1,5 @@
 "use client";
+import { useMemo } from "react";
 import Image from "next/image";
 import { Search, Menu, X, ShoppingCart } from "lucide-react";
 import MobileDrawer from "@/components/layout/MobileDrawer";
@@ -48,30 +49,32 @@ export default function Navbar() {
   }, []);
 
   useEffect(() => {
-  if (search.trim().length < 2) {
-    setProducts([]);
-    return;
-  }
-
-  const timer = setTimeout(async () => {
-    try {
-      const res = await fetch(
-        `/api/products/search?q=${encodeURIComponent(search)}`
-      );
-
-      const data = await res.json();
-      setProducts(data.products || []);
-    } catch (err) {
-      console.error(err);
+    if (search.trim().length < 2) {
+      setProducts([]);
+      return;
     }
-  }, 300);
 
-  return () => clearTimeout(timer);
-}, [search]);
+    const timer = setTimeout(async () => {
+      try {
+        const res = await fetch(
+          `/api/products/search?q=${encodeURIComponent(search)}`,
+        );
 
-  const filteredProducts = products.filter((item) =>
-    item.name?.toLowerCase().includes(search.toLowerCase())
-  );
+        const data = await res.json();
+        setProducts(data.products || []);
+      } catch (err) {
+        console.error(err);
+      }
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [search]);
+
+  const filteredProducts = useMemo(() => {
+    return products.filter((item) =>
+      item.name?.toLowerCase().includes(search.toLowerCase()),
+    );
+  }, [products, search]);
 
   useEffect(() => {
     function handleClickOutside(event) {
@@ -87,7 +90,9 @@ export default function Navbar() {
     };
   }, []);
 
-  const cartItemCount = cart ? cart.reduce((sum, item) => sum + item.quantity, 0) : 0;
+  const cartItemCount = cart
+    ? cart.reduce((sum, item) => sum + item.quantity, 0)
+    : 0;
 
   return (
     <>
@@ -96,13 +101,20 @@ export default function Navbar() {
         <div className="max-w-7xl mx-auto flex justify-between items-center">
           <div className="flex gap-6">
             <span>📞 {setting.phone || "+91 9876543210"}</span>
-            <span className="hidden md:block">⚡ Genuine Electrical Products</span>
+            <span className="hidden md:block">
+              ⚡ Genuine Electrical Products
+            </span>
           </div>
 
           <div className="flex gap-6 items-center">
-            <Link href="/products" className="hover:underline">Shop</Link>
+            <Link href="/products" className="hover:underline">
+              Shop
+            </Link>
             {role === "admin" && (
-              <Link href="/admin/dashboard" className="text-yellow-400 font-semibold hover:underline">
+              <Link
+                href="/admin/dashboard"
+                className="text-yellow-400 font-semibold hover:underline"
+              >
                 Admin Panel 🛠️
               </Link>
             )}
@@ -113,20 +125,20 @@ export default function Navbar() {
       {/* Main Sticky Navbar */}
       <nav className="sticky top-0 z-50 bg-white/90 backdrop-blur-md shadow-sm px-6 py-4 flex justify-between items-center">
         <Link href="/" className="flex items-center gap-3">
-        {setting.logo ? (
-  <Image
-    src={setting.logo}
-    alt={setting.shopName}
-    width={40}
-    height={40}
-    className="w-10 h-10 rounded-full object-cover border"
-    unoptimized
-  />
-) : (
-  <span className="w-10 h-10 rounded-full bg-black text-white flex items-center justify-center">
-    ⚡
-  </span>
-)}
+          {setting.logo ? (
+            <Image
+              src={setting.logo}
+              alt={setting.shopName}
+              width={40}
+              height={40}
+              className="w-10 h-10 rounded-full object-cover border"
+              unoptimized
+            />
+          ) : (
+            <span className="w-10 h-10 rounded-full bg-black text-white flex items-center justify-center">
+              ⚡
+            </span>
+          )}
           <span className="text-xl font-bold">{setting.shopName}</span>
         </Link>
 
@@ -140,6 +152,8 @@ export default function Navbar() {
 
           {/* Search Button Trigger */}
           <button
+            aria-label="Open menu"
+            title="Menu"
             onClick={() => setSearchOpen(!searchOpen)}
             className="p-2 rounded-full hover:bg-gray-100 transition relative"
           >
@@ -174,9 +188,9 @@ export default function Navbar() {
           {session ? (
             <div className="flex items-center gap-3">
               <Link
-  href="/profile"
-  className="flex items-center gap-2 bg-gray-100 hover:bg-gray-200 px-2 lg:px-3 py-2 rounded-full transition"
->
+                href="/profile"
+                className="flex items-center gap-2 bg-gray-100 hover:bg-gray-200 px-2 lg:px-3 py-2 rounded-full transition"
+              >
                 <span className="w-8 h-8 rounded-full bg-black text-white flex items-center justify-center font-bold">
                   {session.user.name?.charAt(0).toUpperCase()}
                 </span>
@@ -191,11 +205,11 @@ export default function Navbar() {
               </Link>
 
               <button
-  onClick={() => signOut({ callbackUrl: "/login" })}
-  className="hidden lg:flex bg-red-600 text-white px-4 py-2 rounded-lg items-center justify-center"
->
-  Logout
-</button>
+                onClick={() => signOut({ callbackUrl: "/login" })}
+                className="hidden lg:flex bg-red-600 text-white px-4 py-2 rounded-lg items-center justify-center"
+              >
+                Logout
+              </button>
             </div>
           ) : (
             <div className="flex items-center gap-3">
@@ -273,10 +287,10 @@ export default function Navbar() {
         </div>
       )}
       <MobileDrawer
-  open={mobileMenuOpen}
-  onClose={() => setMobileMenuOpen(false)}
-  session={session}
-/>
+        open={mobileMenuOpen}
+        onClose={() => setMobileMenuOpen(false)}
+        session={session}
+      />
     </>
   );
 }
