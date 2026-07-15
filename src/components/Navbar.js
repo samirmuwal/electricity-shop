@@ -47,19 +47,27 @@ export default function Navbar() {
     fetchSettings();
   }, []);
 
-  // useEffect(() => {
-  //   async function fetchProducts() {
-  //     try {
-  //       const res = await fetch("/api/products");
-  //       const data = await res.json();
-  //       setProducts(data.products || []);
-  //     } catch (err) {
-  //       console.log(err);
-  //     }
-  //   }
+  useEffect(() => {
+  if (search.trim().length < 2) {
+    setProducts([]);
+    return;
+  }
 
-  //   fetchProducts();
-  // }, []);
+  const timer = setTimeout(async () => {
+    try {
+      const res = await fetch(
+        `/api/products/search?q=${encodeURIComponent(search)}`
+      );
+
+      const data = await res.json();
+      setProducts(data.products || []);
+    } catch (err) {
+      console.error(err);
+    }
+  }, 300);
+
+  return () => clearTimeout(timer);
+}, [search]);
 
   const filteredProducts = products.filter((item) =>
     item.name?.toLowerCase().includes(search.toLowerCase())
