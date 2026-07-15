@@ -5,7 +5,7 @@ import { useState } from "react";
 import { ShoppingBag, ArrowLeft, CheckCircle, CreditCard, Gift } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-
+import Image from "next/image";
 export default function CheckoutPage() {
   const { cart, removeFromCart } = useCart();
   const router = useRouter();
@@ -308,7 +308,10 @@ export default function CheckoutPage() {
                   <img
                     src={item.image || "/placeholder.png"}
                     alt={item.name}
-                    className="w-12 h-12 object-contain border rounded p-0.5 bg-white flex-shrink-0"
+                    width={60}
+                    height={60}
+                    className="w-15 h-15 object-cover rounded-lg"
+                    unoptimized
                   />
                   <div className="flex-1 min-w-0">
                     <p className="font-bold text-sm text-gray-800 line-clamp-1">{item.name}</p>

@@ -1,5 +1,5 @@
 "use client";
-
+ import Image from "next/image";
 export default function ImageUploadInput({ preview, onFileChange }) {
   return (
     <div>
@@ -13,10 +13,13 @@ export default function ImageUploadInput({ preview, onFileChange }) {
       />
 
       {preview && (
-        <img
+        <Image
           src={preview}
           alt="Preview"
-          className="mt-3 w-40 h-40 object-cover rounded-xl border"
+          width={128}
+          height={128}
+          className="w-32 h-32 object-cover rounded"
+          unoptimized
         />
       )}
     </div>

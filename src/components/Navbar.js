@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 import { Search, Menu, X, ShoppingCart } from "lucide-react";
 import MobileDrawer from "@/components/layout/MobileDrawer";
 import { useEffect, useRef, useState } from "react";
@@ -104,17 +105,20 @@ export default function Navbar() {
       {/* Main Sticky Navbar */}
       <nav className="sticky top-0 z-50 bg-white/90 backdrop-blur-md shadow-sm px-6 py-4 flex justify-between items-center">
         <Link href="/" className="flex items-center gap-3">
-          {setting.logo ? (
-            <img
-              src={setting.logo}
-              alt={setting.shopName}
-              className="w-10 h-10 rounded-full object-cover border"
-            />
-          ) : (
-            <span className="w-10 h-10 rounded-full bg-black text-white flex items-center justify-center">
-              ⚡
-            </span>
-          )}
+        {setting.logo ? (
+  <Image
+    src={setting.logo}
+    alt={setting.shopName}
+    width={40}
+    height={40}
+    className="w-10 h-10 rounded-full object-cover border"
+    unoptimized
+  />
+) : (
+  <span className="w-10 h-10 rounded-full bg-black text-white flex items-center justify-center">
+    ⚡
+  </span>
+)}
           <span className="text-xl font-bold">{setting.shopName}</span>
         </Link>
 

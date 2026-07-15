@@ -1,5 +1,5 @@
 "use client";
-
+import Image from "next/image";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import DeleteButton from "@/components/DeleteButton";
@@ -112,11 +112,15 @@ export default function AdminProductsTable() {
             {filtered.map((item) => (
               <tr key={item._id} className="border-b">
                 <td className="p-3">
-                  <img
+                  <Image
                     src={item.image || "/placeholder.png"}
-                    alt={item.name || "Product"}
-                    className="w-14 h-14 object-cover rounded"
+                    alt={item.name}
+                    width={60}
+                    height={60}
+                    className="w-15 h-15 object-cover rounded-lg"
+                    unoptimized
                   />
+                  
                 </td>
 
                 <td className="p-3 font-medium">{item.name}</td>

@@ -1,5 +1,5 @@
 "use client";
-
+import Image from "next/image";
 import { useEffect, useState } from "react";
 import { Save, AlertTriangle, AlertOctagon, Check, Search } from "lucide-react";
 
@@ -69,8 +69,8 @@ export default function AdminStockPage() {
           prev.map((item) =>
             modifiedStocks[item._id] !== undefined
               ? { ...item, stock: modifiedStocks[item._id] }
-              : item
-          )
+              : item,
+          ),
         );
         setModifiedStocks({});
         setStatusMessage("✅ Stock updated successfully!");
@@ -87,11 +87,14 @@ export default function AdminStockPage() {
   };
 
   const filteredProducts = products.filter((item) => {
-    const text = `${item.name || ""} ${item.brand || ""} ${item.category || ""}`.toLowerCase();
+    const text =
+      `${item.name || ""} ${item.brand || ""} ${item.category || ""}`.toLowerCase();
     const matchSearch = text.includes(search.toLowerCase());
 
     const currentStock =
-      modifiedStocks[item._id] !== undefined ? modifiedStocks[item._id] : Number(item.stock || 0);
+      modifiedStocks[item._id] !== undefined
+        ? modifiedStocks[item._id]
+        : Number(item.stock || 0);
 
     let matchStock = true;
     if (stockFilter === "Low Stock") {
@@ -106,7 +109,9 @@ export default function AdminStockPage() {
   const modifiedCount = Object.keys(modifiedStocks).length;
 
   if (loading) {
-    return <p className="p-6 text-gray-500 text-center">Loading stock data...</p>;
+    return (
+      <p className="p-6 text-gray-500 text-center">Loading stock data...</p>
+    );
   }
 
   return (
@@ -114,7 +119,9 @@ export default function AdminStockPage() {
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
         <div>
           <h1 className="text-3xl font-bold">Stock Management ⚡</h1>
-          <p className="text-gray-500 mt-1">Manage and update warehouse stock levels quickly.</p>
+          <p className="text-gray-500 mt-1">
+            Manage and update warehouse stock levels quickly.
+          </p>
         </div>
 
         {modifiedCount > 0 && (
@@ -132,7 +139,10 @@ export default function AdminStockPage() {
       {statusMessage && (
         <div className="bg-slate-900 text-white px-4 py-3 rounded-xl mb-6 flex items-center justify-between shadow text-sm">
           <span>{statusMessage}</span>
-          <button onClick={() => setStatusMessage("")} className="text-gray-400 hover:text-white">
+          <button
+            onClick={() => setStatusMessage("")}
+            className="text-gray-400 hover:text-white"
+          >
             ×
           </button>
         </div>
@@ -147,7 +157,10 @@ export default function AdminStockPage() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
-          <Search size={18} className="absolute left-3.5 top-3.5 text-gray-400" />
+          <Search
+            size={18}
+            className="absolute left-3.5 top-3.5 text-gray-400"
+          />
         </div>
 
         <div className="flex gap-2">
@@ -172,11 +185,21 @@ export default function AdminStockPage() {
         <table className="w-full min-w-[800px]">
           <thead className="bg-gray-50 border-b">
             <tr>
-              <th className="p-4 text-left text-sm font-semibold text-gray-600">Product</th>
-              <th className="p-4 text-left text-sm font-semibold text-gray-600">Category</th>
-              <th className="p-4 text-left text-sm font-semibold text-gray-600">Brand</th>
-              <th className="p-4 text-left text-sm font-semibold text-gray-600">Current Stock</th>
-              <th className="p-4 text-left text-sm font-semibold text-gray-600">Status</th>
+              <th className="p-4 text-left text-sm font-semibold text-gray-600">
+                Product
+              </th>
+              <th className="p-4 text-left text-sm font-semibold text-gray-600">
+                Category
+              </th>
+              <th className="p-4 text-left text-sm font-semibold text-gray-600">
+                Brand
+              </th>
+              <th className="p-4 text-left text-sm font-semibold text-gray-600">
+                Current Stock
+              </th>
+              <th className="p-4 text-left text-sm font-semibold text-gray-600">
+                Status
+              </th>
             </tr>
           </thead>
 
@@ -212,23 +235,37 @@ export default function AdminStockPage() {
               }
 
               return (
-                <tr key={item._id} className={isModified ? "bg-orange-50/20" : ""}>
+                <tr
+                  key={item._id}
+                  className={isModified ? "bg-orange-50/20" : ""}
+                >
                   <td className="p-4">
                     <div className="flex items-center gap-3">
                       <img
                         src={item.image || "/placeholder.png"}
                         alt={item.name}
-                        className="w-12 h-12 object-contain border rounded p-1 bg-white flex-shrink-0"
+                        width={60}
+                        height={60}
+                        className="w-15 h-15 object-cover rounded-lg"
+                        unoptimized
                       />
                       <div>
-                        <p className="font-bold text-gray-800 text-sm line-clamp-1">{item.name}</p>
-                        <p className="text-xs text-gray-400">SKU: {item.sku || "N/A"}</p>
+                        <p className="font-bold text-gray-800 text-sm line-clamp-1">
+                          {item.name}
+                        </p>
+                        <p className="text-xs text-gray-400">
+                          SKU: {item.sku || "N/A"}
+                        </p>
                       </div>
                     </div>
                   </td>
 
-                  <td className="p-4 text-sm text-gray-600">{item.category || "N/A"}</td>
-                  <td className="p-4 text-sm text-gray-600">{item.brand || "N/A"}</td>
+                  <td className="p-4 text-sm text-gray-600">
+                    {item.category || "N/A"}
+                  </td>
+                  <td className="p-4 text-sm text-gray-600">
+                    {item.brand || "N/A"}
+                  </td>
 
                   <td className="p-4">
                     <div className="flex items-center gap-2">
@@ -236,13 +273,20 @@ export default function AdminStockPage() {
                         type="number"
                         min="0"
                         className={`w-20 border p-2 rounded-lg text-center font-semibold text-sm outline-none focus:border-orange-500 transition ${
-                          isModified ? "border-orange-400 bg-orange-50/50" : "bg-gray-50 border-gray-200"
+                          isModified
+                            ? "border-orange-400 bg-orange-50/50"
+                            : "bg-gray-50 border-gray-200"
                         }`}
                         value={currentStock}
-                        onChange={(e) => handleStockChange(item._id, e.target.value)}
+                        onChange={(e) =>
+                          handleStockChange(item._id, e.target.value)
+                        }
                       />
                       {isModified && (
-                        <span className="text-orange-500" title="Unsaved changes">
+                        <span
+                          className="text-orange-500"
+                          title="Unsaved changes"
+                        >
                           ●
                         </span>
                       )}
@@ -257,7 +301,9 @@ export default function AdminStockPage() {
         </table>
 
         {filteredProducts.length === 0 && (
-          <p className="p-8 text-center text-gray-500 text-sm">No products found matching filters.</p>
+          <p className="p-8 text-center text-gray-500 text-sm">
+            No products found matching filters.
+          </p>
         )}
       </div>
     </div>
