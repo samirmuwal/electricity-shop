@@ -264,6 +264,7 @@ export default function Navbar() {
                       src={product.image || "/placeholder.png"}
                       alt={product.name}
                       className="w-10 h-10 object-contain rounded border bg-white"
+                      sizes="(max-width:768px) 100vw, 300px"
                     />
                     <div className="text-left">
                       <p className="font-medium text-sm text-gray-800">

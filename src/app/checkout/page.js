@@ -311,7 +311,7 @@ export default function CheckoutPage() {
                     width={60}
                     height={60}
                     className="w-15 h-15 object-cover rounded-lg"
-                    unoptimized
+                   sizes="(max-width:768px) 100vw, 300px"
                   />
                   <div className="flex-1 min-w-0">
                     <p className="font-bold text-sm text-gray-800 line-clamp-1">{item.name}</p>

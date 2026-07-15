@@ -78,7 +78,7 @@ export default function CartPage() {
                     width={60}
                     height={60}
                     className="w-15 h-15 object-cover rounded-lg"
-                    unoptimized
+                    sizes="(max-width:768px) 100vw, 300px"
                   />
 
                   <div className="flex-1 text-center sm:text-left">

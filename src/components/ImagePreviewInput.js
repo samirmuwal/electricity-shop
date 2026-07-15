@@ -20,6 +20,7 @@ export default function ImagePreviewInput({ defaultValue = "" }) {
           src={image}
           alt="Preview"
           className="mt-3 w-40 h-40 object-cover rounded-xl border"
+          sizes="(max-width:768px) 100vw, 300px"
         />
       )}
     </div>

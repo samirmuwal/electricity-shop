@@ -247,7 +247,7 @@ export default function AdminStockPage() {
                         width={60}
                         height={60}
                         className="w-15 h-15 object-cover rounded-lg"
-                        unoptimized
+                       sizes="(max-width:768px) 100vw, 300px"
                       />
                       <div>
                         <p className="font-bold text-gray-800 text-sm line-clamp-1">
